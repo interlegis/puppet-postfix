@@ -1,0 +1,8 @@
+### GERENCIADO PELO PUPPET ####
+<% for i in (0..transport_map.length-1) do -%>
+<% 	if transport_map[i]['server'] -%>
+<%		for j in (0..transport_map[i]['recipients'].length-1) do -%>
+<%=transport_map[i]['recipients'][j]%> :[<%=transport_map[i]['server']%>]<%if transport_map[i]['port']%>:<%=transport_map[i]['port']%><%end%>
+<%		end -%>
+<% 	end -%>
+<% end -%>

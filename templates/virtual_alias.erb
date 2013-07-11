@@ -1,0 +1,3 @@
+<% @mailgroups.each do |r| -%>
+<%=r['mail']%> <%if r['member']%><%r['member'].each do |m|%><% if m %><%=m%>, <%end%><%end%><%end%>
+<% end -%>

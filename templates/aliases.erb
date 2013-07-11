@@ -1,0 +1,8 @@
+#
+## ARQUIVO GERENCIADO PELO PUPPET ##
+#
+
+# See man 5 aliases for format
+<% for i in (0..alias_names.length-1) do -%>
+<%=alias_names[i]%>: <%=aliases[alias_names[i]]%>
+<% end -%>

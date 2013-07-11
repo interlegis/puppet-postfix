@@ -1,0 +1,54 @@
+## ARQUIVO GERENCIADO PELO PUPPET ##
+## Postfix main.cf ##
+
+<% for i in (0..itens.length-1) do -%>
+<%=itens[i]%> = <%=postfix_conf[itens[i]]%>
+
+<% end -%>
+
+<% if @aliases.length > 0 -%>
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+<% end -%>
+
+<% if @amavis_conf -%>
+content_filter = smtp-amavis:[127.0.0.1]:10024
+<% end -%> 
+
+<% if @ssl_cert and @ssl_key %>
+# TLS parameters        
+smtpd_tls_security_level = none
+smtpd_tls_protocols = !SSLv2 !SSLv3
+smtpd_tls_cert_file = /etc/ssl/certs/ssl-cert-mta.pem
+smtpd_tls_key_file = /etc/ssl/private/ssl-cert-mta.key
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+tls_random_source = dev:/dev/urandom
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtp_tls_security_level = may
+smtp_tls_protocols = !SSLv2 !SSLv3
+<% end %>
+
+# sanity checks
+smtpd_sender_restrictions = <% smtpd_sender_restrictions.each do |r|%><%=r%>, 
+			    <%end%>
+smtpd_recipient_restrictions = <% for i in (0..smtpd_recipient_restrictions.length-1) do -%>
+<%=smtpd_recipient_restrictions[i]%>,
+<% if @relay_recipients.length != 0 and i == smtpd_recipient_restrictions.length-2 -%>
+			       check_recipient_access hash:/etc/postfix/relay_recipients,
+<%end-%>
+			       <%end%>
+
+inet_interfaces = <%=inet_interfaces%>
+
+<% if @mailgroups -%>
+# Resolve grupos
+virtual_alias_maps = hash:/etc/postfix/virtual_alias
+<% end -%>
+
+<% if @dkim_conf -%>
+# DKIM
+milter_default_action = accept
+milter_protocol = 6
+smtpd_milters = inet:localhost:8891
+non_smtpd_milters = inet:localhost:8891
+<% end -%>
