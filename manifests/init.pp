@@ -1,26 +1,32 @@
 #init.pp
 
 class postfix (	
-		$ssl_cert = undef,	    		#SSL Certificate Content
-		$ssl_key = undef,	    		#SSL Key Content	
-		$postfix_conf = [],	    		#Array of hashes with Postfix Configuration	Variables
-		$smtpd_sender_restrictions = [], 	#Sender Restrictions
-		$smtpd_recipient_restrictions = [],	#Recipient Restrictions
-		$inet_interfaces = "all",		#Interfaces which postfix will listen
-		$amavis_conf = undef,	    		#Hash with amavis configuration. Undef if not in use.
-		$spamassassin_conf = undef, 		#Hash with SpamAssassin config. Undef if not in use.
-		$aliases = [],				#Array of hashes with aliases
-		$relay_recipients = [],			#Array of hashes with Relay Recipients
-		$mailgroups = undef,			#Array of hashes with e-mail groups
-		$transport_map = [],			#Array of hashes with transport map
-		$dkim_conf = undef,			#OpenDKIM Configuration
+	$ssl_cert = undef,	    		#SSL Certificate Content
+	$ssl_key = undef,	    		#SSL Key Content	
+	$postfix_conf = undef,	    		#Hashes with Postfix Configuration Variables
+	$smtpd_sender_restrictions = [], 	#Sender Restrictions
+	$smtpd_recipient_restrictions = [],	#Recipient Restrictions
+	$inet_interfaces = "all",		#Interfaces which postfix will listen
+	$amavis_conf = undef,	    		#Hash with amavis configuration. Undef if not in use.
+	$spamassassin_conf = undef, 		#Hash with SpamAssassin config. Undef if not in use.
+	$aliases = undef,			#Array of hashes with aliases
+	$relay_recipients = [],			#Array of hashes with Relay Recipients
+	$mailgroups = undef,			#Array of hashes with e-mail groups
+	$transport_map = [],			#Array of hashes with transport map
+	$dkim_conf = undef,			#OpenDKIM Configuration
+	$mailuid = 'vmail',			#Mail User ID
+	$mailgid = 'vmail',			#Mail Group ID	
+	$use_dovecot_lda = false,		#Configures Dovecot LDA in master.cf
 ){
 	include stdlib
 	package { "postfix": ensure => "present" }
-	package { "postfix-ldap": ensure => "present" }
        
-	#Postfix main configuration 
-	$itens = keys($postfix_conf)
+	#Postfix main configuration
+	if $postfix_conf { 
+		$itens = keys($postfix_conf)
+	} else {
+		$itens = []
+	}
         file { "/etc/postfix/main.cf":
                 owner => root, group => root, mode => 444,
 		content => template('postfix/main.cf.erb'),
@@ -29,8 +35,12 @@ class postfix (
                 owner => root, group => root, mode => 444,
 		content => template('postfix/master.cf.erb'),
         }
-	
-	$alias_names = keys($aliases)
+
+	if $aliases {	
+		$alias_names = keys($aliases)
+	} else {
+		$alias_names = []
+	}
         file { "/etc/aliases":
                 owner => root, group => root, mode => 444,
                 content => template("postfix/aliases.erb"),

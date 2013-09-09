@@ -139,3 +139,8 @@ smtp-amavis     unix    -       -       -       -       2       smtp
         -o smtpd_client_connection_rate_limit=0
         -o receive_override_options=no_header_body_checks,no_unknown_recipient_checks
 <% end %>
+<% if @use_dovecot_lda -%>
+## Dovecot LDA
+dovecot   unix  -       n       n       -       -       pipe
+  flags=DRhu user=<%=@mailuid%>:<%=@mailgid%> argv=/usr/lib/dovecot/dovecot-lda -f ${sender} -d ${user}
+<% end -%>
