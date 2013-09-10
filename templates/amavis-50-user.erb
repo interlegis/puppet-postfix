@@ -36,10 +36,10 @@ $enable_dkim_verification = <%=amavis_conf["enable_dkim_verification"]%>;
 
 # Don't be verbose about sending mail:
 @whitelist_sender_acl = qw( .$mydomain );
-$final_virus_destiny      = D_DISCARD; # (defaults to D_BOUNCE)
-$final_banned_destiny     = D_DISCARD;  # (defaults to D_BOUNCE)
-$final_spam_destiny       = D_DISCARD;  # (defaults to D_REJECT)
-$final_bad_header_destiny = D_PASS;  # (defaults to D_PASS), D_BOUNCE suggested
+$final_virus_destiny      = <%= @amavis_conf["final_virus_destiny"] ? amavis_conf["final_virus_destiny"] : "D_BOUNCE" %>; # (defaults to D_BOUNCE)
+$final_banned_destiny     = <%= @amavis_conf["final_banned_destiny"] ? amavis_conf["final_banned_destiny"] : "D_BOUNCE" %>; # (defaults to D_BOUNCE)
+$final_spam_destiny       = <%= @amavis_conf["final_spam_destiny"] ? amavis_conf["final_spam_destiny"] : "D_REJECT" %>; # (defaults to D_REJECT)
+$final_bad_header_destiny = <%= @amavis_conf["final_bad_header_destiny"] ? amavis_conf["final_bad_header_destiny"] : "D_PASS" %>; # (defaults to D_PASS), D_BOUNCE suggested
 
 $virus_admin = undef;
 $spam_admin = undef;

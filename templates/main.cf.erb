@@ -15,18 +15,22 @@ alias_database = hash:/etc/aliases
 content_filter = smtp-amavis:[127.0.0.1]:10024
 <% end -%> 
 
-<% if @ssl_cert and @ssl_key %>
-# TLS parameters        
+<% if @ssl_cert and @ssl_key -%>
+# TLS parameters
+<% if !@postfix_conf['smtpd_tls_security_level'] -%>        
 smtpd_tls_security_level = none
+<% end -%>
 smtpd_tls_protocols = !SSLv2 !SSLv3
 smtpd_tls_cert_file = /etc/ssl/certs/ssl-cert-mta.pem
 smtpd_tls_key_file = /etc/ssl/private/ssl-cert-mta.key
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 tls_random_source = dev:/dev/urandom
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+<% if !@postfix_conf['smtp_tls_security_level'] -%>
 smtp_tls_security_level = may
+<% end -%>
 smtp_tls_protocols = !SSLv2 !SSLv3
-<% end %>
+<% end -%>
 
 # sanity checks
 smtpd_sender_restrictions = <% smtpd_sender_restrictions.each do |r|%><%=r%>, 

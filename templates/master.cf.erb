@@ -1,5 +1,5 @@
 #
-## ARQUIVO GERENCIADO PELO PUPPET ##
+## PUPPET MANAGED FILE. CHANGES WILL BE OVERWRITTEN! ##
 #
 #
 # Postfix master process configuration file.  For details on the format
@@ -12,7 +12,12 @@
 #               (yes)   (yes)   (yes)   (never) (100)
 # ==========================================================================
 smtp      inet  n       -       -       -       -       smtpd
-#submission inet n       -       -       -       -       smtpd
+<% if @enable_submission -%>
+submission inet n       -       -       -       -       smtpd
+<% end -%>
+<% @submission_options.each_pair do | key, value | -%>
+  -o <%= key %>=<%= value %>
+<% end -%>
 #  -o smtpd_tls_security_level=encrypt
 #  -o smtpd_sasl_auth_enable=yes
 #  -o smtpd_client_restrictions=permit_sasl_authenticated,reject

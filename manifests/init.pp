@@ -17,6 +17,8 @@ class postfix (
 	$mailuid = 'vmail',			#Mail User ID
 	$mailgid = 'vmail',			#Mail Group ID	
 	$use_dovecot_lda = false,		#Configures Dovecot LDA in master.cf
+	$enable_submission = false,		#Enables SMTP 587 submisssion service
+	$submission_options = {},		#Options for submission
 ){
 	include stdlib
 	package { "postfix": ensure => "present" }
