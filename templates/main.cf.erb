@@ -1,8 +1,8 @@
 ## ARQUIVO GERENCIADO PELO PUPPET ##
 ## Postfix main.cf ##
 
-<% for i in (0..itens.length-1) do -%>
-<%=itens[i]%> = <%=postfix_conf[itens[i]]%>
+<% @postfix_conf.sort_by {|key,value| key}.each do |key,value| -%>
+<%=key%> = <%=value%>
 
 <% end -%>
 

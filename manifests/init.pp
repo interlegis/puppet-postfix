@@ -25,11 +25,6 @@ class postfix (
 	package { "postfix": ensure => "present" }
        
 	#Postfix main configuration
-	if $postfix_conf { 
-		$itens = keys($postfix_conf)
-	} else {
-		$itens = []
-	}
         file { "/etc/postfix/main.cf":
                 owner => root, group => root, mode => 444,
 		content => template('postfix/main.cf.erb'),
