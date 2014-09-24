@@ -19,6 +19,7 @@ class postfix (
 	$use_dovecot_lda = false,		#Configures Dovecot LDA in master.cf
 	$enable_submission = false,		#Enables SMTP 587 submisssion service
 	$submission_options = {},		#Options for submission
+	$smtp_service_options = {},		#Options for SMTP service
 ){
 	include stdlib
 	package { "postfix": ensure => "present" }

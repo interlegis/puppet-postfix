@@ -12,6 +12,9 @@
 #               (yes)   (yes)   (yes)   (never) (100)
 # ==========================================================================
 smtp      inet  n       -       -       -       -       smtpd
+<% @smtp_service_options.each_pair do | key, value | -%>
+  -o <%= key %>=<%= value %>
+<% end -%>
 <% if @enable_submission -%>
 submission inet n       -       -       -       -       smtpd
 <% end -%>
