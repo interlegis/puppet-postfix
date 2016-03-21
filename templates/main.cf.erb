@@ -48,11 +48,3 @@ inet_interfaces = <%=inet_interfaces%>
 # Resolve grupos
 virtual_alias_maps = hash:/etc/postfix/virtual_alias
 <% end -%>
-
-<% if @dkim_conf -%>
-# DKIM
-milter_default_action = accept
-milter_protocol = 6
-smtpd_milters = inet:localhost:8891
-non_smtpd_milters = inet:localhost:8891
-<% end -%>
