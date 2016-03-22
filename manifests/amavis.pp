@@ -1,6 +1,6 @@
 #amavis.pp
 
-class postfix::amavis {
+class postfix::amavis ( $amavis_conf ) {
 
   #Amavis configuration
   package { "amavisd-new": ensure => "present" }
@@ -16,7 +16,7 @@ class postfix::amavis {
   $amavis_decoders = [  "arj",
                         "cabextract",
                         "cpio",
-                        "lha",
+                        "lhasa",
                         "pax",
                         "rar",
                         "unrar",
