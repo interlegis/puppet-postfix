@@ -51,6 +51,7 @@ class postfix (
     owner => root, group => root, mode => 444,
     content => template("postfix/aliases.erb"),
     notify => Exec['newaliases']
+    require => Package['postfix'],
   }
   
   exec { "newaliases":
@@ -59,12 +60,14 @@ class postfix (
     logoutput => true,
     timeout => 30,
     refreshonly => true
+    require => Package['postfix'],
   }
   
   file { "/etc/postfix/transport_map":
     owner => root, group => root, mode => 444,
     content => template("postfix/transport_map.erb"),
     notify => Exec['update transport_map']
+    require => Package['postfix'],
   }
   
   exec { "update transport_map":
@@ -73,6 +76,7 @@ class postfix (
     logoutput => true,                
     timeout => 30,
     refreshonly => true
+    require => Package['postfix'],
   }
 
   #SSL Configuration
@@ -100,11 +104,15 @@ class postfix (
                        "/etc/postfix/transport_map",
                        "/etc/aliases" 
                      ],
+    require => Package['postfix'],
   }
 
   
   if $amavis_conf {
-    include postfix::amavis
+    class { 'postfix::amavis':
+      amavis_conf => $amavis_conf,
+      require => Package['postfix'],
+    }
   }
 
   ##Relay Recipients
@@ -112,6 +120,7 @@ class postfix (
     ensure => "present",
     content => template("postfix/relay_recipients.erb"),
     notify => Exec["update relay recipients map"],
+    require => Package['postfix'],
   }
   exec { "update relay recipients map":
     cwd => "/etc/postfix",
@@ -120,6 +129,7 @@ class postfix (
     timeout => 30,
     refreshonly => true,
     notify => Service["postfix"]
+    require => Package['postfix'],
   }
 
   ##Groups
@@ -128,6 +138,7 @@ class postfix (
       ensure => "present",
       content => template("postfix/virtual_alias.erb"),
       notify => Exec["update virtual alias map"],
+      require => Package['postfix'],
     }
     exec { "update virtual alias map":
       cwd => "/etc/postfix",
@@ -136,6 +147,7 @@ class postfix (
       timeout => 30,
       refreshonly => true,
       notify => Service["postfix"]
+      require => Package['postfix'],
     }
   }
 
