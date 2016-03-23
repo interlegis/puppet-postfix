@@ -48,7 +48,8 @@ class postfix::amavis ( $amavis_conf ) {
   user { "clamav":
     membership => "minimum",
     groups => ["amavis"],
-    require => Package["clamav-daemon"]
+    require => [ Package["clamav-daemon"],
+                 Package["amavisd-new"] ]
   }
 
   service { "amavis":

@@ -50,7 +50,7 @@ class postfix (
   file { "/etc/aliases":
     owner => root, group => root, mode => 444,
     content => template("postfix/aliases.erb"),
-    notify => Exec['newaliases']
+    notify => Exec['newaliases'],
     require => Package['postfix'],
   }
   
@@ -59,14 +59,14 @@ class postfix (
     command => "/usr/bin/newaliases",
     logoutput => true,
     timeout => 30,
-    refreshonly => true
+    refreshonly => true,
     require => Package['postfix'],
   }
   
   file { "/etc/postfix/transport_map":
     owner => root, group => root, mode => 444,
     content => template("postfix/transport_map.erb"),
-    notify => Exec['update transport_map']
+    notify => Exec['update transport_map'],
     require => Package['postfix'],
   }
   
@@ -75,7 +75,7 @@ class postfix (
     command => "/usr/sbin/postmap transport_map",
     logoutput => true,                
     timeout => 30,
-    refreshonly => true
+    refreshonly => true,
     require => Package['postfix'],
   }
 
@@ -128,7 +128,7 @@ class postfix (
     logoutput => true,
     timeout => 30,
     refreshonly => true,
-    notify => Service["postfix"]
+    notify => Service["postfix"],
     require => Package['postfix'],
   }
 
@@ -146,7 +146,7 @@ class postfix (
       logoutput => true,
       timeout => 30,
       refreshonly => true,
-      notify => Service["postfix"]
+      notify => Service["postfix"],
       require => Package['postfix'],
     }
   }
